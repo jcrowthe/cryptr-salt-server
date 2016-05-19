@@ -30,6 +30,31 @@ var ldapCN = 'CN=users,DC=ad,DC=example,DC=com';
 var ldapENTRY = 'OU=Other,DC=ad,DC=example,DC=com';
 ```
 
+Lastly, you must use Apache or nginx as a proxy for Cryptr-server, in order to handle HTTPS.
+
+You may use something like the following. (Example config for CentOS 6.7 with Apache 2.2). In short, Cryptr-server listens for http connections on port 3353. You will need to proxy this via HTTPS, as the cryptr client requires an HTTPS URL.
+
+```
+<VirtualHost *:443>
+    DocumentRoot /var/www/html
+    ServerName example.com
+
+    ErrorLog /var/log/ssl_error_log
+    TransferLog /var/log/ssl_access_log
+    LogLevel warn
+
+    SSLEngine on
+    SSLProtocol -ALL +TLSv1
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+    SSLCertificateFile /etc/ssl/certs/cert.crt
+    SSLCertificateKeyFile /etc/ssl/certs/key.key
+    SSLCertificateChainFile /etc/ssl/certs/intermediate.crt
+
+    ProxyPass /cryptr http://localhost:3353
+    ProxyPassReverse /cryptr http://localhost:3353
+</VirtualHost>
+```
+
 Done!
 
 
