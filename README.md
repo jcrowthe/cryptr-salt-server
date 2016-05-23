@@ -9,8 +9,9 @@ Installing
 The following must be done on a linux-based salt master. Currently cryptr-server must be run as root in order to talk to Salt (however this will change in the near future).
 
 ```
-cd /var && mkdir cryptr && cd cryptr
+mkdir /var/run/cryptr && mkdir /var/cryptr && cd /var/cryptr
 git clone https://github.com/jcrowthe/cryptr-server.git
+cd cryptr-server
 npm install
 ```
 
