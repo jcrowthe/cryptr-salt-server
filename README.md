@@ -56,7 +56,51 @@ You may use something like the following. (Example config for CentOS 6.7 with Ap
 </VirtualHost>
 ```
 
-Done!
+
+
+Salt Pillar data
+----------------
+
+The following is an example salt YAML|GPG file. This is the format Cryptr is expecting for  username/password combinations.
+
+```
+#!yaml|gpg
+
+my_credentials:
+  username: |
+    admin
+  note: |
+    My personal username and password
+  password: |
+    -----BEGIN PGP MESSAGE-----
+    Version: GnuPG v1
+
+    hQEMT3O5l6QSqAQf/SEC2TGDNGNiwYgg/MIjt3P05FVVkYT11oH9NfE9
+    k7ozbTsgGxj/Q5w/7H/aLOXtI3jra6+NwnYlgKPTUd7ggWvs33joL5AS
+    Ic1JNKjzd2xsbitQRZKug80A7...
+    =UuPg
+    -----END PGP MESSAGE-----
+
+my_other_credentials:
+  username: |
+    root
+  note: |
+    My other username and password
+  password: |
+    -----BEGIN PGP MESSAGE-----
+    Version: GnuPG v1
+
+    hQEMT3O5l6QSqAQf/SEC2TGDNGNiwYgg/MIjt3P05FVVkYT11oH9NfE9
+    k7ozbTsgGxj/Q5w/7H/aLOXtI3jra6+NwnYlgKPTUd7ggWvs33joL5AS
+    Ic1JNKjzd2xsbitQRZKug80A7...
+    =UuPg
+    -----END PGP MESSAGE-----
+
+...
+
+```
+
+
 
 
 Running
