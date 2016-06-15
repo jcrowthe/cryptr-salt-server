@@ -14,7 +14,16 @@ var crypto              = require('crypto-js');
 var child               = require('child_process');
 var CronJob             = require('cron').CronJob;
 
-var log = bunyan.createLogger({name: "cryptr-server"});
+var log = bunyan.createLogger({
+	name: "cryptr-server",
+	streams: [{
+		level: 'info',
+		stream: process.stdout
+	}, {
+		level: 'error',
+		path: '/var/log/cryptr-server.log'
+	}]
+});
 var keys = {};
 var keysArray = [];
 var keyTime = new Date();
@@ -143,6 +152,7 @@ passport.deserializeUser(function(id, done) {
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
 app.use(cookieParser());
 app.set('trust proxy', 1);
 app.use(session({
@@ -151,7 +161,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        maxAge: 240000,
+        maxAge: 600000,
     }
 }));
 app.use(passport.initialize());
@@ -250,6 +260,36 @@ app.post('/remove', secure, function(req, res) {
         return res.json({
             status: 'success',
             message: 'Keys removed.'
+        });
+    }
+});
+
+// Delete Folder
+app.post('/deletefolder', secure, function(req, res) {
+    if (!req.body) {
+        return res.json({
+            status: 'error',
+            message: 'No data provided.'
+        });
+    } else if (!req.body.folder){
+        log.info('User ' + req.user.username + ' did not provide a folder to delete.');
+        return res.json({
+            status: 'error',
+            message: 'No folder provided.'
+        });
+    } else if (!localstorage[req.body.folder]) {
+        log.info('User ' + req.user.username + '. Folder does not exist.');
+        return res.json({
+            status: 'error',
+            message: 'Folder does not exist.'
+        });
+    } else {
+        delete localstorage[req.body.folder];
+        fs.writeFile("/var/cryptr/init.json", JSON.stringify(localstorage));            // Write changes to file
+        log.info('User ' + req.user.username + ' deleted folder: ', req.body.folder);
+        return res.json({
+            status: 'success',
+            message: 'Folder removed.'
         });
     }
 });
