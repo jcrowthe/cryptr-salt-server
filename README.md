@@ -9,7 +9,7 @@ Installing
 The following must be done on either the salt master, or a minion with access to all of the pillar values. Currently cryptr-server must be run as root in order to talk to Salt (however this will change in the future).
 
 ```
-mkdir /var/run/cryptr-server && cd /var
+mkdir /var/run/cryptr-server && mkdir /var/log/cryptr-server && cd /var
 git clone https://github.com/jcrowthe/cryptr-server.git
 cd cryptr-server
 npm install
