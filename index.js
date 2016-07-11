@@ -44,7 +44,7 @@ var ldapENTRY = 'OU=Other,DC=ad,DC=example,DC=com';   // The LDAP search entry p
 
 // =================== Configure Python Socket ======================
 // Configure unix socket for communication with salt master
-var socketPath = '/var/run/cryptr/conn.sock';
+var socketPath = '/var/run/cryptr-server/conn.sock';
 var pysocket = net.createServer(function(conn) {
     var buff = '';
     conn.on('data', function(data) {
@@ -84,7 +84,7 @@ pysocket.on('error', function(e) {
 
 // Update keys
 function updateKeys() {
-    child.spawn('python', ['/var/cryptr/get.py']);
+    child.spawn('python', ['/var/cryptr-server/get.py']);
 }
 updateKeys();
 
@@ -96,8 +96,8 @@ new CronJob('0 3 * * * *', function() { updateKeys(); }, null, true, 'America/Lo
 // =================== Cryptr Folder Storage ======================
 // Initialize local storage
 var localstorage = {};
-try { localstorage = JSON.parse(fs.readFileSync('/var/cryptr/init.json', 'utf8')); }
-catch(e) { fs.writeFile("/var/cryptr/init.json", "{}"); }
+try { localstorage = JSON.parse(fs.readFileSync('/var/cryptr-server/init.json', 'utf8')); }
+catch(e) { fs.writeFile("/var/cryptr-server/init.json", "{}"); }
 
 
 // =================== Configure PassportJS ======================
@@ -220,7 +220,7 @@ app.post('/move', secure, function(req, res) {
         }
         var temp = new Set(localstorage[req.body.dest]);                                // Convert array to set, and back to array to clear duplicates
         localstorage[req.body.dest] = Array.from(temp);
-        fs.writeFile("/var/cryptr/init.json", JSON.stringify(localstorage));            // Write changes to file
+        fs.writeFile("/var/cryptr-server/init.json", JSON.stringify(localstorage));            // Write changes to file
         log.info('User ' + req.user.username + ' moved keys: ', req.body);
         return res.json({
             status: 'success',
@@ -255,7 +255,7 @@ app.post('/remove', secure, function(req, res) {
                 if (index != -1) localstorage[req.body.dest].splice(index, 1);
             }
         }
-        fs.writeFile("/var/cryptr/init.json", JSON.stringify(localstorage));            // Write changes to file
+        fs.writeFile("/var/cryptr-server/init.json", JSON.stringify(localstorage));            // Write changes to file
         log.info('User ' + req.user.username + ' removed keys: ', req.body);
         return res.json({
             status: 'success',
@@ -285,7 +285,7 @@ app.post('/deletefolder', secure, function(req, res) {
         });
     } else {
         delete localstorage[req.body.folder];
-        fs.writeFile("/var/cryptr/init.json", JSON.stringify(localstorage));            // Write changes to file
+        fs.writeFile("/var/cryptr-server/init.json", JSON.stringify(localstorage));            // Write changes to file
         log.info('User ' + req.user.username + ' deleted folder: ', req.body.folder);
         return res.json({
             status: 'success',

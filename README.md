@@ -6,10 +6,10 @@ This repo houses the companion server module that turns your SaltStack salt mast
 
 Installing
 ----------
-The following must be done on a linux-based salt master. Currently cryptr-server must be run as root in order to talk to Salt (however this will change in the near future).
+The following must be done on either the salt master, or a minion with access to all of the pillar values. Currently cryptr-server must be run as root in order to talk to Salt (however this will change in the future).
 
 ```
-mkdir /var/run/cryptr && mkdir /var/cryptr && cd /var/cryptr
+mkdir /var/run/cryptr-server && cd /var
 git clone https://github.com/jcrowthe/cryptr-server.git
 cd cryptr-server
 npm install
