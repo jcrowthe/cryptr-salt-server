@@ -53,6 +53,7 @@ var pysocket = net.createServer(function(conn) {
     conn.on('end', function(data) {
         keyTime = new Date();
         var temp = JSON.parse(buff.toString());
+		keys = {};
         for (var key in temp) {
             keys[key] = temp[key];
             keys[key].parsedname = crypto.SHA512(key).toString(crypto.enc.Hex);
