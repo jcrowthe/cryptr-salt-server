@@ -1,4 +1,4 @@
-# Cryptr-Server
+# Cryptr-Salt-Server
 This repo houses the companion server module that turns your SaltStack salt master into a  [Cryptr](https://github.com/jcrowthe/cryptr)-enabled salt master.
 
 ##### Cryptr
